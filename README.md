@@ -14,29 +14,24 @@ Je n’ai évidement pas chronométré le temps passé sur ce projet mais j’es
 </p><pre>	</pre>Dans un deuxième temps, j’ai poursuivi mon projet en développant une interface graphiqueqe à l’aide de la bibliothèque SDL (Simple Direct Media Layer). C’est ma première expérience d’interface graphique en C (j’avais déjà réalisé une interface avec JavaScript  où des fonctionnalités de dessin sont implémentées de base dans le langage). Il s’agissait d’une démarche personnelle d’approfondissement même si j’ai échangé à plusieurs reprises avec mon professeur d’informatique pour obtenir des conseils. J’ai pris beaucoup de temps à chercher dans la documentation officielle, et dans de nombreux tutoriels faits par d’autres utilisateurs, pour apprendre à utiliser la bibliothèque. 
 </p>
 
-<p>Aussi, j’ai créé une dizaine d’images avec le logiciel Gimp, qui vont du pion élémentaire blanc ou noir aux écrans types menu principal, règles ou choix du mode de jeu. L’affichage fonctionne grâce à une boucle de jeu en trois étapes : récupération des entrées venant des utilisateurs, puis, mise à jour des données du programme en fonction de l’action récupérée, enfin, mise à jour de l’affichage pour refléter les changements internes. 
-</p>
-<p>
-Cette partie a été relativement longue (environ 60 heures) correspondant au temps de découverte et d’apprentissage de la bibliothèque. La mise en œuvre n’est pas très compliquée mais c’est elle qui nécessite le plus de code. 
-</p>
-<p><pre>	</pre>Dans un troisième temps, je me suis lancé le défi d’ajouter un mode de jeu seul contre l’ordinateur. La première étape a été de faire jouer des coups aléatoires à l’ordinateur. 
-</p>
-<p>
-Puis, comme cette méthode ne permet pas de jouer des parties intéressantes, je me suis intéressé à une approche par la méthode de Monte Carlo. Le but de cette méthode est de réaliser un grand nombre de simulations de parties sur chaque coup possible puis de sélectionner le coup où l’intelligence artificielle gagne le plus souvent. Pour réaliser une simulation, on fait jouer tour à tour un coup aléatoire à chaque camp jusqu’à arriver à une fin de partie.
-</p>
+<p>Aussi, j’ai créé une dizaine d’images avec le logiciel Gimp, qui vont du pion élémentaire blanc ou noir aux écrans types menu principal, règles ou choix du mode de jeu. L’affichage fonctionne grâce à une boucle de jeu en trois étapes : récupération des entrées venant des utilisateurs, puis, mise à jour des données du programme en fonction de l’action récupérée, enfin, mise à jour de l’affichage pour refléter les changements internes. </p>
 
-<p>Le problème de cette méthode est que, pour qu’elle soit efficace, il faut réaliser un maximum de simulations sur chaque coup possible pour éviter les anomalies statistiques qui pourraient laisser penser qu’un coup est intéressant car il a conduit à plusieurs victoires par pur hasard. Ainsi, même en se limitant aux coups possibles dans le carré de 13 de coté centré sur le dernier coup joué, et à 1000 simulations par coup - soit un maximum de 168 000 simulations - cela demande un long temps de calcul (près de 5 secondes sur mon ordinateur doté d’un processeur Intel core I7-770HQ cadencé à 2,8GHz de fréquence). 
-</p>
+<p>Cette partie a été relativement longue (environ 60 heures) correspondant au temps de découverte et d’apprentissage de la bibliothèque. La mise en œuvre n’est pas très compliquée mais c’est elle qui nécessite le plus de code.</p>
+
+<p><pre>	</pre>Dans un troisième temps, je me suis lancé le défi d’ajouter un mode de jeu seul contre l’ordinateur. La première étape a été de faire jouer des coups aléatoires à l’ordinateur. </p>
+
+<p>Puis, comme cette méthode ne permet pas de jouer des parties intéressantes, je me suis intéressé à une approche par la méthode de Monte Carlo. Le but de cette méthode est de réaliser un grand nombre de simulations de parties sur chaque coup possible puis de sélectionner le coup où l’intelligence artificielle gagne le plus souvent. Pour réaliser une simulation, on fait jouer tour à tour un coup aléatoire à chaque camp jusqu’à arriver à une fin de partie.</p>
+
+<p>Le problème de cette méthode est que, pour qu’elle soit efficace, il faut réaliser un maximum de simulations sur chaque coup possible pour éviter les anomalies statistiques qui pourraient laisser penser qu’un coup est intéressant car il a conduit à plusieurs victoires par pur hasard. Ainsi, même en se limitant aux coups possibles dans le carré de 13 de coté centré sur le dernier coup joué, et à 1000 simulations par coup - soit un maximum de 168 000 simulations - cela demande un long temps de calcul (près de 5 secondes sur mon ordinateur doté d’un processeur Intel core I7-770HQ cadencé à 2,8GHz de fréquence). </p>
 
 <p>Pour autant ce mode de jeu m’a apporté une grande satisfaction : l’ordinateur m’a battu dans une partie que je jouais réellement.
-J’ai décidé de poursuivre pour réduire la puissance de calcul demandée en utilisant l’algorithme de MCTS (Monte Carlo Tree Search), se basant sur le même principe de fonctionnement mais choisissant les coups à approfondir à l’aide de la valeur UCT (Upper Confidence bound applied to Trees) de ses fils. Cette valeur UCT permet de s’intéresser principalement aux coups qui paraissent prometteurs, sans pour autant complètement oublier ceux qui n’ont pas été essayés récemment. En utilisant cet algorithme, le nombre de simulations peut être drastiquement réduit sans pour autant perdre en correction du résultat.
-</p>	
-<p>
-L’algorithme se décompose en quatre phases :
+J’ai décidé de poursuivre pour réduire la puissance de calcul demandée en utilisant l’algorithme de MCTS (Monte Carlo Tree Search), se basant sur le même principe de fonctionnement mais choisissant les coups à approfondir à l’aide de la valeur UCT (Upper Confidence bound applied to Trees) de ses fils. Cette valeur UCT permet de s’intéresser principalement aux coups qui paraissent prometteurs, sans pour autant complètement oublier ceux qui n’ont pas été essayés récemment. En utilisant cet algorithme, le nombre de simulations peut être drastiquement réduit sans pour autant perdre en correction du résultat.</p>	
+
+<p>L’algorithme se décompose en quatre phases :
 	<ul>
 	<li>Une phase de sélection. On parcourt chaque enfant du nœud sur lequel on se trouve et on 	choisi celui dont la valeur UCT est maximale, on répète ce processus jusqu’à arriver sur une 	feuille de l’arbre de jeu.</li>
 	<li>Une phase d’expansion si on a déjà fait une simulation sur cette feuille (Ajout d’un  fils 	par coup possible à partir de l’état du jeu puis sélection d’un fils).</li>
-	<li>Une phase de simulation avec des coups aléatoires depuis l’état actuel du jeu jusqu’à une 	fin possible <li>
+	<li>Une phase de simulation avec des coups aléatoires depuis l’état actuel du jeu jusqu’à une 	fin possible </li>
 	<li> Une phase de rétro-propagation du  résultat de la simulation à tous les parents de ce nœud 	jusqu’à la racine (incrémentation de nombre de simulations et augmentation du score du 	nœud 	avec le résultat).</li>
 	</ul>	
 	
